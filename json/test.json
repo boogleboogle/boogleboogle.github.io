@@ -20786,7 +20786,7 @@
                 "path": "UserEventPlugins/com.apple.opendirectory.matching.plugin",
                 "children": [
                     {
-                        "value": 8,
+                        "value": 8000,
                         "name": "Contents",
                         "path": "UserEventPlugins/com.apple.opendirectory.matching.plugin/Contents"
                     }
