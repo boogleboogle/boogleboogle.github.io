@@ -1,0 +1,156 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+            google.charts.load('current', {'packages':['treemap']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'ID');
+      data.addColumn('string', 'Parent');
+      data.addColumn('number', 'Number Of Lines');
+      data.addRows([
+        ['국가 기후기술 분류체계', null, 0],
+
+        ['감축', '국가 기후기술 분류체계', null],
+        ['적응', '국가 기후기술 분류체계', null],
+        ['감축/적응 융복합', '국가 기후기술 분류체계', null],
+
+        ['온실가스 저감', '감축', null],
+        ['온실가스 고정', '감축', null],
+
+        ['에너지 생산 & 공급', '온실가스 저감', null],
+        ['에너지 저장 & 운송', '온실가스 저감', null],
+        ['에너지 수요', '온실가스 저감', null],
+
+        ['발전 & 전환', '에너지 생산 & 공급', null],
+
+        ['비재생 에너지', '발전 & 전환', null],
+        ['재생 에너지', '발전 & 전환', null],
+        ['신에너지', '발전 & 전환', null],
+
+        ['원자력 발전', '비재생 에너지', 1],
+        ['핵융합 발전', '비재생 에너지', 1],
+        ['청정화력 발전·효율화', '비재생 에너지', 1],
+
+        ['수력', '재생 에너지', 1],
+        ['태양광', '재생 에너지', 1],
+        ['태양열', '재생 에너지', 1],
+        ['지열', '재생 에너지', 1],
+        ['풍력', '재생 에너지', 1],
+        ['해양에너지', '재생 에너지', 1],
+        ['바이오 에너지', '재생 에너지', 1],
+        ['폐기물', '재생 에너지', 1],
+
+        ['수소제조', '신에너지', 1],
+        ['연료전지', '신에너지', 1],
+
+        ['에너지 저장', '에너지 저장 & 운송', null],
+        ['송배전 & 전력 IT', '에너지 저장 & 운송', null],
+
+        ['전력저장', '에너지 저장', 1],
+        ['수소저장', '에너지 저장', 1],
+
+        ['송배전 시스템', '송배전 & 전력 IT', 1],
+        ['전기지능화 기기', '송배전 & 전력 IT', 1],
+
+        ['수송효율화', '에너지 수요', 1],
+        ['산업효율화', '에너지 수요', 1],
+        ['건축효율화', '에너지 수요', 1],
+
+        ['CCUS', '온실가스 고정', 1],
+        ['Non-Co2 저감', '온실가스 고정', 1],
+
+        ['농업 & 축산', '적응', null],
+        ['물관리', '적응', null],
+        ['기후변화예측 및 모니터링', '적응', null],
+        ['해양, 수산 & 연안', '적응', null],
+        ['건강', '적응', null],
+        ['산림 & 육상', '적응', null],
+
+        ['유전자원 & 유전개량', '농업 & 축산', 1],
+        ['작물재배 & 생산', '농업 & 축산', 1],
+        ['가축질병관리', '농업 & 축산', 1],
+        ['가공, 저장 & 유통', '농업 & 축산', 1],
+
+        ['수계 & 수생태계', '물관리', 1],
+        ['수자원 확보 및 공급', '물관리', 1],
+        ['수처리', '물관리', 1],
+        ['수재해 관리', '물관리', 1],
+
+        ['기후 예측 및 모델링', '기후변화예측 및 모니터링', 1],
+        ['기후 정보 & 경보 시스템', '기후변화예측 및 모니터링', 1],
+
+        ['해양생태계', '해양, 수산 & 연안', 1],
+        ['수산자원', '해양, 수산 & 연안', 1],
+        ['연안재해 관리', '해양, 수산 & 연안', 1],
+        
+        ['감염 질병 관리', '건강', 1],
+        ['식품 안전 예방', '건강', 1],
+        
+        ['산림 생산 증진', '산림 & 육상', 1],
+        ['산림 피해 저감', '산림 & 육상', 1],
+        ['생태 모니터링 & 복원', '산림 & 육상', 1],
+
+        ['다분야 중첩', '감축/적응 융복합', null],
+
+        ['신재생에너지 하이브리드', '다분야 중첩', 1],
+        ['저전력 소모 장비', '다분야 중첩', 1],
+        ['에너지하베스팅', '다분야 중첩', 1],
+        ['인공광합성', '다분야 중첩', 1],
+        ['분류체계로 다루기 어려운 기후변화 관련 기타 기술', '다분야 중첩', 1],
+      ]);
+
+      var tree = new google.visualization.TreeMap(document.getElementById('chart_div'));
+
+      var options = { // For v49 or before
+        highlightOnMouseOver: true,
+        maxDepth: 6,
+        maxPostDepth: 2,
+        minHighlightColor: '#8c6bb1',
+        midHighlightColor: '#9ebcda',
+        maxHighlightColor: '#edf8fb',
+        minColor: '#009688',
+        midColor: '#f7f7f7',
+        maxColor: '#ee8100',
+        headerHeight: 15,
+        showScale: true,
+        height: 500,
+        useWeightedAverageForAggregation: true
+      };
+
+      var optionsV50 = { // For v50+
+        enableHighlight: true,
+        maxDepth: 6,
+        maxPostDepth: 6,
+        minHighlightColor: '#8c6bb1',
+        midHighlightColor: '#9ebcda',
+        maxHighlightColor: '#edf8fb',
+        minColor: '#009688',
+        midColor: '#f7f7f7',
+        maxColor: '#ee8100',
+        headerHeight: 15,
+        showScale: true,
+        height: 500,
+        useWeightedAverageForAggregation: true,
+        // Use click to highlight and double-click to drill down.
+        eventsConfig: {
+          highlight: ['click'],
+          unhighlight: ['mouseout'],
+          rollup: ['contextmenu'],
+          drilldown: ['dblclick'],
+        }
+      };
+
+        tree.draw(data, options);
+        // Please uncomment the following line for v50+.
+        // tree.draw(data, optionsV50);
+
+      }
+    </script>
+  </head>
+  <body>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+  </body>
+</html>
