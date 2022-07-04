@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+<head>
+  <meta charset="utf-8">
+</head>
+<body style="height: 100%; margin: 0">
+  <div id="container" style="height: 100%"></div>
+
+  
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script>
+  <script type="text/javascript">
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var app = {};
+    
+    var option;
+
+    var dataMap = {};
+function dataFormatter(obj) {
+  var pList = [          '합계 소계',
+          '\n감축 소계',
+          '감축 비재생에너지',
+          '\n감축 재생에너지',
+          '감축 신에너지',
+          '\n감축 에너지저장',
+          '감축 송배전 및 에너지관리',
+          '\n감축 에너지수요',
+          '감축 온실가스  고정',
+          '\n적응 소계',
+          '적응 농업축산',
+          '\n적응 물',
+          '감축 및 적응 소계',
+          '\n감축 및 적응 융복합',];
+  var temp;
+  for (var year = 2012; year <= 2018; year++) {
+    var max = 0;
+    var sum = 0;
+    temp = obj[year];
+    for (var i = 0, l = temp.length; i < l; i++) {
+      max = Math.max(max, temp[i]);
+      sum += temp[i];
+      obj[year][i] = {
+        name: pList[i],
+        value: temp[i],
+      };
+    }
+
+    obj[year + 'max'] = Math.floor(max / 100) * 100;
+    obj[year + 'sum'] = sum;
+
+  }
+  return obj;
+}
+// 합계소계, 감축 소계, 감축 비재생에너지, 감축 재생에너지, 감축 신에너지, 감축 에너지저장, 감축 송재번 및 에너지관리, 감축 에너지수요, 감축 온실가스 고정, 감축 소계, 감축 농업축산, 감축및 적응 소계, 감축및 적응 감축 및 적응 융복합
+// 전체
+dataMap.dataTotal = dataFormatter({
+    2018: [2339175, 2246186, 57098, 413394, 67353, 369005, 111370, 1210980, 16986, 50864, 14198, 36666, 42125, 42125],
+    2017: [2256393, 2161765, 67256, 431357, 60452, 330039, 105855, 1148851, 17955, 55322, 12858, 42464, 39306, 39306],
+    2016: [2041939, 1941463, 67261, 349158, 53904, 298408, 106407, 1044259, 22067, 56985, 13194, 43791, 43491, 43491],
+    2015: [1937116, 1847585, 28495, 314786, 49787, 284800, 110579, 1044460, 14678, 51144, 12596, 38549, 38387, 38387],
+    2014: [1904750, 1817551, 63617, 274796, 47642, 271808, 119925, 1023441, 16322, 51248, 11996, 39252, 35951, 35951],
+    2013: [1894190, 1753802, 69708, 286497, 44706, 265978, 108024, 958887, 20001, 66730, 13070, 53660, 73658, 73658],
+    2012: [1819184, 1702527, 58288, 316611, 63901, 242067, 97352, 908619, 15688, 52127, 12615, 39512, 64530, 64530],
+    
+});
+// 대기업
+dataMap.dataConglomerate = dataFormatter({
+    2018: [554427, 532931, 37937, 11345, 2370, 190350, 53944, 236986, 0, 3548, 0, 3548, 17947, 17947],
+    2017: [519095, 498683, 48202, 11097, 2607, 160599, 46938, 229245, -6, 5121, 0, 5121, 15292, 15292],
+    2016: [499345, 475855, 49485, 11320, 2776, 149855, 44045, 218264, 110, 5371, 1, 5370, 18119, 18119],
+    2015: [464544, 439816, 13623, 9583, 2555, 142120, 41835, 229939, 161, 7034, 5, 7029, 17694, 17694],
+    2014: [503564, 481650, 50702, 6552, 2405, 148068, 44388, 229494, 40, 5228, 47, 5181, 16686, 16686],
+    2013: [567001, 504826, 55966, 10971, 2175, 146975, 42153, 246557, 29, 8599, 32, 8567, 53576, 53576],
+    2012: [493113, 436409, 44472, 12822, 2108, 136036, 31838, 209090, 44, 6384, 38, 6346, 50320, 50320],
+    
+});
+// 중견기업
+dataMap.dataMedium = dataFormatter({
+    2018: [424209, 399260, 816, 86960, 4290, 42771, 7925, 239585, 16914, 7323, 1508, 5814, 17626, 17626],
+    2017: [402527, 378032, 1013, 78802, 3270, 36016, 8858, 232276, 17797, 7262, 1657, 5605, 17232, 17232],
+    2016: [383463, 358289, 1014, 68648, 3459, 33977, 10069, 219393, 21729, 7266, 1526, 5740, 17908, 17908],
+    2015: [338822, 318534, 1041, 55132, 2805, 31766, 8936, 204450, 14405, 7045, 1705, 5340, 13243, 13243],
+    2014: [317854, 299126, 853, 50991, 2905, 27521, 9509, 191126, 16221, 6659, 1519, 5140, 12069, 12069],
+    2013: [302179, 283271, 894, 50583, 2760, 25575, 7842, 175669, 19949, 6894, 1629, 5265, 12014, 12014],
+    2012: [278556, 263234, 834, 45817, 2354, 22975, 7621, 168006, 15627, 6357, 1322, 5036, 8965, 8965],
+    
+});
+// 중소기업
+dataMap.dataSmall = dataFormatter({
+    2018: [1249220, 1203418, 0, 243939, 56349, 132000, 44671, 726460, 0, 39952, 12665, 27287, 5850, 5850],
+    2017: [1221701, 1172600, 0, 268472, 50920, 129039, 44091, 680064, 14, 42866, 11161, 31704, 6235, 6235],
+    2016: [1076089, 1024967, 0, 213597, 47409, 113605, 47313, 603030, 12, 44277, 11628, 32649, 6844, 6844],
+    2015: [1040086, 996051, 0, 186571, 44426, 106256, 55158, 603622, 18, 37012, 10866, 26146, 7022, 7022],
+    2014: [1024319, 977788, 0, 181210, 42331, 95310, 61651, 597275, 10, 39336, 10429, 28907, 7194, 7194],
+    2013: [963832, 904550, 0, 187148, 39724, 92977, 54481, 530221, 0, 51213, 11408, 39805, 8068, 8068],
+    2012: [982383, 937803, 0, 212853, 59363, 82927, 54893, 527768, 0, 39335, 11226, 28109, 5245, 5245],
+    
+});
+// 연구소 등 비영리기관
+dataMap.dataEtc = dataFormatter({
+    2018: [111318, 110577, 18346, 71150, 4344, 3885, 4829, 7950, 72, 40, 25, 16, 701, 701],
+    2017: [113070, 112450, 18041, 72986, 3655, 4384, 5968, 7266, 150, 73, 39, 34, 547, 547],
+    2016: [83042, 82352, 16762, 55592, 260, 970, 4980, 3572, 216, 71, 39, 32, 619, 619],
+    2015: [93665, 93183, 13831, 63500, 0, 4657, 4650, 6450, 94, 53, 20, 33, 428, 428],
+    2014: [59014, 58987, 12062, 36043, 0, 908, 4376, 5547, 51, 25, 0, 25, 2, 2],
+    2013: [61178, 61155, 12848, 37796, 48, 451, 3548, 6440, 23, 23, 0, 23, 0, 0],
+    2012: [65131, 65080, 12982, 45120, 77, 129, 3000, 3756, 17, 51, 29, 22, 0, 0],
+    
+});
+
+option = {
+  baseOption: {
+    timeline: {
+      axisType: 'category',
+      // realtime: false,
+      // loop: false,
+      autoPlay: true,
+      // currentIndex: 2,
+      playInterval: 1000,
+      // controlStyle: {
+      //     position: 'left'
+      // },
+      data: [
+        '2012',
+        '2013',
+        '2014',
+        '2015',
+        '2016',
+        '2017',
+        '2018',
+      ],
+      label: {
+        formatter: function (s) {
+          return new Date(s).getFullYear();
+        }
+      }
+    },
+    title: {
+      subtext: '「기후기술산업통계」, 한국과학기술연구원'
+    },
+    tooltip: {},
+    legend: {
+      left: 'right',
+      data: ['전체', '대기업', '중견기업', '중소기업', '연구소 등 비영리기관'],
+    },
+    calculable: true,
+    grid: {
+      top: 80,
+      bottom: 100,
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow',
+          label: {
+            show: true,
+            formatter: function (params) {
+              return params.value.replace('\n', '');
+            }
+          }
+        }
+      }
+    },
+    xAxis: [
+      {
+        type: 'category',
+        axisLabel: { interval: 0 },
+        data: [
+          '합계 소계',
+          '\n감축 소계',
+          '감축 비재생에너지',
+          '\n감축 재생에너지',
+          '감축 신에너지',
+          '\n감축 에너지저장',
+          '감축 송배전 및 에너지관리',
+          '\n감축 에너지수요',
+          '감축 온실가스  고정',
+          '\n적응 소계',
+          '적응 농업축산',
+          '\n적응 물',
+          '감축 및 적응 소계',
+          '\n감축 및 적응 융복합',
+        ],
+        splitLine: { show: false }
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        name: '(단위: 백만원）'
+      }
+    ],
+    series: [
+      { name: '전체', type: 'bar' },
+      { name: '대기업', type: 'bar' },
+      { name: '중견기업', type: 'bar' },
+      { name: '중소기업', type: 'bar' },
+      { name: '연구소 등 비영리기관', type: 'bar' },
+      {
+        name: '대분류별 비율 ',
+        type: 'pie',
+        center: ['75%', '35%'],
+        radius: '28%',
+        z: 100
+      }
+    ]
+  },
+  options: [
+    {
+      title: { text: '2012 기후기술 부문별,기업규모별 연구개발비 현황' },
+      series: [
+        { data: dataMap.dataTotal['2012'] },
+        { data: dataMap.dataConglomerate['2012'] },
+        { data: dataMap.dataMedium['2012'] },
+        { data: dataMap.dataSmall['2012'] },
+        { data: dataMap.dataEtc['2012'] },
+        {
+          data: [
+            { name: '감축', value: dataMap.dataTotal['2012'][1].value },
+            { name: '적응', value: dataMap.dataTotal['2012'][9].value  },
+            { name: '감축 및 적응', value: dataMap.dataTotal['2012'][12].value }
+          ]
+        }
+      ]
+    },
+    {
+      title: { text: '2013 기후기술 부문별,기업규모별 연구개발비 현황' },
+      series: [
+        { data: dataMap.dataTotal['2013'] },
+        { data: dataMap.dataConglomerate['2013'] },
+        { data: dataMap.dataMedium['2013'] },
+        { data: dataMap.dataSmall['2013'] },
+        { data: dataMap.dataEtc['2013'] },
+        {
+          data: [
+            { name: '감축', value: dataMap.dataTotal['2013'][1].value },
+            { name: '적응', value: dataMap.dataTotal['2013'][9].value  },
+            { name: '감축 및 적응', value: dataMap.dataTotal['2013'][12].value }
+          ]
+        }
+      ]
+    },
+    {
+      title: { text: '2014 기후기술 부문별,기업규모별 연구개발비 현황' },
+      series: [
+        { data: dataMap.dataTotal['2014'] },
+        { data: dataMap.dataConglomerate['2014'] },
+        { data: dataMap.dataMedium['2014'] },
+        { data: dataMap.dataSmall['2014'] },
+        { data: dataMap.dataEtc['2014'] },
+        {
+          data: [
+            { name: '감축', value: dataMap.dataTotal['2014'][1].value },
+            { name: '적응', value: dataMap.dataTotal['2014'][9].value  },
+            { name: '감축 및 적응', value: dataMap.dataTotal['2014'][12].value }
+          ]
+        }
+      ]
+    },
+    {
+      title: { text: '2015 기후기술 부문별,기업규모별 연구개발비 현황' },
+      series: [
+        { data: dataMap.dataTotal['2015'] },
+        { data: dataMap.dataConglomerate['2015'] },
+        { data: dataMap.dataMedium['2015'] },
+        { data: dataMap.dataSmall['2015'] },
+        { data: dataMap.dataEtc['2015'] },
+        {
+          data: [
+            { name: '감축', value: dataMap.dataTotal['2015'][1].value },
+            { name: '적응', value: dataMap.dataTotal['2015'][9].value  },
+            { name: '감축 및 적응', value: dataMap.dataTotal['2015'][12].value }
+          ]
+        }
+      ]
+    },
+    {
+      title: { text: '2016 기후기술 부문별,기업규모별 연구개발비 현황' },
+      series: [
+        { data: dataMap.dataTotal['2016'] },
+        { data: dataMap.dataConglomerate['2016'] },
+        { data: dataMap.dataMedium['2016'] },
+        { data: dataMap.dataSmall['2016'] },
+        { data: dataMap.dataEtc['2016'] },
+        {
+          data: [
+            { name: '감축', value: dataMap.dataTotal['2016'][1].value },
+            { name: '적응', value: dataMap.dataTotal['2016'][9].value  },
+            { name: '감축 및 적응', value: dataMap.dataTotal['2016'][12].value }
+          ]
+        }
+      ]
+    },
+    {
+      title: { text: '2017 기후기술 부문별,기업규모별 연구개발비 현황' },
+      series: [
+        { data: dataMap.dataTotal['2017'] },
+        { data: dataMap.dataConglomerate['2017'] },
+        { data: dataMap.dataMedium['2017'] },
+        { data: dataMap.dataSmall['2017'] },
+        { data: dataMap.dataEtc['2017'] },
+        {
+          data: [
+            { name: '감축', value: dataMap.dataTotal['2017'][1].value },
+            { name: '적응', value: dataMap.dataTotal['2017'][9].value  },
+            { name: '감축 및 적응', value: dataMap.dataTotal['2017'][12].value }
+          ]
+        }
+      ]
+    },
+    {
+      title: { text: '2018 기후기술 부문별,기업규모별 연구개발비 현황' },
+      series: [
+        { data: dataMap.dataTotal['2018'] },
+        { data: dataMap.dataConglomerate['2018'] },
+        { data: dataMap.dataMedium['2018'] },
+        { data: dataMap.dataSmall['2018'] },
+        { data: dataMap.dataEtc['2018'] },
+        {
+          data: [
+            { name: '감축', value: dataMap.dataTotal['2018'][1].value },
+            { name: '적응', value: dataMap.dataTotal['2018'][9].value  },
+            { name: '감축 및 적응', value: dataMap.dataTotal['2018'][12].value }
+          ]
+        }
+      ]
+    },
+  ]
+};
+
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+  </script>
+</body>
+</html>
