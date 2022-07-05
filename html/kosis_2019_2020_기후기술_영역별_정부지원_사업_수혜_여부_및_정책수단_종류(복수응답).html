@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+<head>
+  <meta charset="utf-8">
+</head>
+<body style="height: 100%; margin: 0">
+  <div id="container" style="height: 100%"></div>
+
+  
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script>
+  <script type="text/javascript">
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var app = {};
+    
+    var option;
+
+    var dataMap = {};
+function dataFormatter(obj) {
+  var pList = [          '합계 소계',
+          '\n감축 소계',
+          '감축 비재생에너지',
+          '\n감축 재생에너지',
+          '감축 신에너지',
+          '\n감축 에너지저장',
+          '감축 송배전 및 에너지관리',
+          '\n감축 에너지수요',
+          '감축 온실가스  고정',
+          '\n적응 소계',
+          '적응 농업축산',
+          '\n적응 물',
+          '적응 예측,모니터링',
+          '\n적응 해양수산연안',
+          '적응 건강',
+          '\n적응 산림육상',
+          '감축 및 적응 소계',
+          '\n감축 및 적응 융복합',];
+  var temp;
+  for (var year = 2019; year <= 2020; year++) {
+    var max = 0;
+    var sum = 0;
+    temp = obj[year];
+    for (var i = 0, l = temp.length; i < l; i++) {
+      max = Math.max(max, temp[i]);
+      sum += temp[i];
+      obj[year][i] = {
+        name: pList[i],
+        value: temp[i],
+      };
+    }
+
+    obj[year + 'max'] = Math.floor(max / 100) * 100;
+    obj[year + 'sum'] = sum;
+
+  }
+  return obj;
+}
+// 합계소계, 감축 소계, 감축 비재생에너지, 감축 재생에너지, 감축 신에너지, 감축 에너지저장, 감축 송재번 및 에너지관리, 감축 에너지수요, 감축 온실가스 고정, 적응 소계, 적응 농업축산, 적응 물관리, 적응 예측모니터링, 적응 해양수산연안, 적응 건강, 적응 산림육상, 감축및 적응 소계, 감축및 적응 감축 및 적응 융복합
+// 정부지원 사업_수혜여부 합계
+dataMap.data1 = dataFormatter({
+    2020: [7604, 6012, 78, 2064, 148, 464, 424, 2790, 45, 1432, 533, 721, 27, 58, 48, 45, 159, 159],
+    2019: [7379, 6163, 84, 2113, 148, 481, 433, 2856, 48, 1049, 417, 632, 0, 0, 0, 0, 167, 167],
+    
+});
+// 정부지원 사업_수혜여부 없음
+dataMap.data2 = dataFormatter({
+    2020: [4653, 3716, 21, 1294, 94, 279, 240, 1775, 12, 834, 306, 451, 6, 38, 12, 23, 103, 103],
+    2019: [4714, 3947, 40, 1373, 75, 300, 256, 1883, 20, 645, 253, 391, 0, 0, 0, 0, 123, 123],
+
+});
+// 정부지원 사업_수혜여부 있음
+dataMap.data3 = dataFormatter({
+    2020: [2950, 2296, 58, 770, 54, 185, 184, 1014, 32, 598, 227, 270, 21, 20, 36, 23, 57, 57],
+    2019: [2665, 2217, 44, 740, 73, 181, 177, 973, 28, 404, 164, 241, 0, 0, 0, 0, 44, 44],
+
+    
+});
+// 정책수단_금융지원
+dataMap.data4 = dataFormatter({
+    2020: [1861, 1446, 50, 497, 27, 113, 71, 662, 27, 374, 152, 149, 9, 11, 30, 23, 40, 40],
+    2019: [1649, 1369, 25, 474, 49, 108, 67, 630, 16, 250, 107, 143, 0, 0, 0, 0, 30, 30],
+
+    
+});
+// 정책수단_기술개발지원
+dataMap.data5 = dataFormatter({
+    2020: [490, 393, 2, 140, 12, 48, 48, 143, 1, 91, 37, 48, 2, 2, 2, 0, 6, 6],
+    2019: [453, 391, 0, 154, 15, 46, 30, 137, 9, 60, 27, 33, 0, 0, 0, 0, 2, 2],
+
+    
+});
+
+// 정책수단_수주지원
+dataMap.data6 = dataFormatter({
+    2020: [1542, 1240, 28, 401, 40, 110, 148, 495, 19, 277, 112, 131, 7, 12, 13, 2, 26, 26],
+    2019: [1388, 1186, 29, 375, 26, 118, 94, 543, 1, 181, 75, 106, 0, 0, 0, 0, 21, 21],
+
+    
+});
+
+// 정책수단_판매/마케팅
+dataMap.data7 = dataFormatter({
+    2020: [153, 131, 8, 51, 4, 10, 8, 44, 5, 23, 2, 19, 0, 0, 2, 0, 0, 0],
+    2019: [143, 127, 0, 40, 9, 10, 17, 41, 9, 16, 0, 16, 0, 0, 0, 0, 0, 0],
+
+    
+});
+// 정책수단_인력양성지원
+dataMap.data8 = dataFormatter({
+    2020: [124, 107, 19, 25, 3, 22, 8, 28, 3, 15, 7, 4, 3, 0, 0, 0, 2, 2],
+    2019: [52, 39, 2, 18, 5, 8, 0, 4, 2, 13, 9, 4, 0, 0, 0, 0, 0, 0],
+
+    
+});
+// 정책수단_해외진출지원
+dataMap.data9 = dataFormatter({
+    2020: [50, 39, 3, 16, 0, 4, 0, 13, 4, 11, 5, 4, 2, 0, 0, 0, 0, 0],
+    2019: [24, 17, 0, 10, 0, 0, 4, 0, 3, 7, 3, 3, 0, 0, 0, 0, 0, 0],
+
+    
+});
+// 기타
+dataMap.data10 = dataFormatter({
+    2020: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    2019: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+
+    
+});
+
+
+option = {
+  baseOption: {
+    timeline: {
+      axisType: 'category',
+      // realtime: false,
+      // loop: false,
+      autoPlay: true,
+      // currentIndex: 2,
+      playInterval: 3000,
+      // controlStyle: {
+      //     position: 'left'
+      // },
+      data: [
+        '2019',
+        '2020',
+      ],
+      label: {
+        formatter: function (s) {
+          return new Date(s).getFullYear();
+        }
+      }
+    },
+    title: {
+      subtext: '「기후기술산업통계」, 한국과학기술연구원'
+    },
+    tooltip: {},
+    legend: {
+      left: 'right',
+      data: ['정부지원 사업_수혜여부 합계','정부지원 사업_수혜여부 없음','정부지원 사업_수혜여부 있음','정책수단_금융지원','정책수단_기술개발지원','정책수단_수주지원','정책수단_판매/마케팅','정책수단_인력양성지원','정책수단_해외진출지원','기타'],
+    },
+    calculable: true,
+    grid: {
+      top: 80,
+      bottom: 100,
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow',
+          label: {
+            show: true,
+            formatter: function (params) {
+              return params.value.replace('\n', '');
+            }
+          }
+        }
+      }
+    },
+    xAxis: [
+      {
+        type: 'category',
+        axisLabel: { interval: 0 },
+        data: [
+          '합계 소계',
+          '\n감축 소계',
+          '감축 비재생에너지',
+          '\n감축 재생에너지',
+          '감축 신에너지',
+          '\n감축 에너지저장',
+          '감축 송배전 및 에너지관리',
+          '\n감축 에너지수요',
+          '감축 온실가스  고정',
+          '\n적응 소계',
+          '적응 농업축산',
+          '\n적응 물',
+          '적응 예측, 모니터링',
+          '\n 적응 해상수산연안',
+          '적응 건강',
+          '\n 적응 산림육상',
+          '감축 및 적응 소계',
+          '\n감축 및 적응 융복합',
+        ],
+        splitLine: { show: false }
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        name: '(단위: 건）'
+      }
+    ],
+    series: [
+      { name: '정부지원 사업_수혜여부 합계', type: 'bar' },
+      { name: '정부지원 사업_수혜여부 없음', type: 'bar' },
+      { name: '정부지원 사업_수혜여부 있음', type: 'bar' },
+      { name: '정책수단_금융지원', type: 'bar' },
+      { name: '정책수단_기술개발지원', type: 'bar' },
+      { name: '정책수단_수주지원', type: 'bar' },
+      { name: '정책수단_판매/마케팅', type: 'bar' },
+      { name: '정책수단_인력양성지원', type: 'bar' },
+      { name: '정책수단_해외진출지원', type: 'bar' },
+      { name: '기타', type: 'bar' },
+    ]
+  },
+  options: [
+    {
+      title: { text: '2020 기후기술 영역별 정부지원 사업 수혜 여부 및 정책수단 종류(복수응답)' },
+      series: [
+        { data: dataMap.data1['2020'] },
+        { data: dataMap.data2['2020'] },
+        { data: dataMap.data3['2020'] },
+        { data: dataMap.data4['2020'] },
+        { data: dataMap.data5['2020'] },
+        { data: dataMap.data6['2020'] },
+        { data: dataMap.data7['2020'] },
+        { data: dataMap.data8['2020'] },
+        { data: dataMap.data9['2020'] },
+        { data: dataMap.data10['2020'] },
+      ]
+    },
+    {
+      title: { text: '2019 기후기술 영역별 정부지원 사업 수혜 여부 및 정책수단 종류(복수응답)' },
+      series: [
+        { data: dataMap.data1['2019'] },
+        { data: dataMap.data2['2019'] },
+        { data: dataMap.data3['2019'] },
+        { data: dataMap.data4['2019'] },
+        { data: dataMap.data5['2019'] },
+        { data: dataMap.data6['2019'] },
+        { data: dataMap.data7['2019'] },
+        { data: dataMap.data8['2019'] },
+        { data: dataMap.data9['2019'] },
+        { data: dataMap.data10['2019'] },
+      ]
+    },
+  ]
+};
+
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+  </script>
+</body>
+</html>

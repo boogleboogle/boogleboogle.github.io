@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+<head>
+  <meta charset="utf-8">
+</head>
+<body style="height: 100%; margin: 0">
+  <div id="container" style="height: 100%"></div>
+
+  
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script>
+  <script type="text/javascript">
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var app = {};
+    
+    var option;
+
+    var dataMap = {};
+function dataFormatter(obj) {
+  var pList = [          '합계 소계',
+          '\n감축 소계',
+          '감축 비재생에너지',
+          '\n감축 재생에너지',
+          '감축 신에너지',
+          '\n감축 에너지저장',
+          '감축 송배전 및 에너지관리',
+          '\n감축 에너지수요',
+          '감축 온실가스  고정',
+          '\n적응 소계',
+          '적응 농업축산',
+          '\n적응 물',
+          '적응 예측,모니터링',
+          '\n적응 해양수산연안',
+          '적응 건강',
+          '\n적응 산림육상',
+          '감축 및 적응 소계',
+          '\n감축 및 적응 융복합',];
+  var temp;
+  for (var year = 2019; year <= 2020; year++) {
+    var max = 0;
+    var sum = 0;
+    temp = obj[year];
+    for (var i = 0, l = temp.length; i < l; i++) {
+      max = Math.max(max, temp[i]);
+      sum += temp[i];
+      obj[year][i] = {
+        name: pList[i],
+        value: temp[i],
+      };
+    }
+
+    obj[year + 'max'] = Math.floor(max / 100) * 100;
+    obj[year + 'sum'] = sum;
+
+  }
+  return obj;
+}
+// 합계소계, 감축 소계, 감축 비재생에너지, 감축 재생에너지, 감축 신에너지, 감축 에너지저장, 감축 송재번 및 에너지관리, 감축 에너지수요, 감축 온실가스 고정, 적응 소계, 적응 농업축산, 적응 물관리, 적응 예측모니터링, 적응 해양수산연안, 적응 건강, 적응 산림육상, 감축및 적응 소계, 감축및 적응 감축 및 적응 융복합
+// 특허보유규모
+dataMap.data1 = dataFormatter({
+    2020: [554723, 491880, 7694, 108811, 7469, 74942, 71776, 218645, 2543, 23094, 6286, 12331, 2457, 520, 1090, 410, 39749, 39749],
+    2019: [536351, 481747, 7405, 104106, 7069, 70900, 69306, 220916, 2045, 14523, 4347, 10176, 0, 0, 0, 0, 40081, 40081],
+    
+});
+// 당해연도 특허등록건수
+dataMap.data2 = dataFormatter({
+    2020: [43242, 39081, 1372, 10559, 704, 12867, 1355, 12143, 81, 3495, 950, 2241, 158, 80, 48, 18, 666, 666],
+    2019: [52867, 47134, 586, 11676, 692, 7618, 6603, 19739, 220, 1192, 448, 744, 0, 0, 0, 0, 4541, 4541],
+
+    
+});
+
+
+option = {
+  baseOption: {
+    timeline: {
+      axisType: 'category',
+      // realtime: false,
+      // loop: false,
+      autoPlay: true,
+      // currentIndex: 2,
+      playInterval: 3000,
+      // controlStyle: {
+      //     position: 'left'
+      // },
+      data: [
+        '2019',
+        '2020',
+      ],
+      label: {
+        formatter: function (s) {
+          return new Date(s).getFullYear();
+        }
+      }
+    },
+    title: {
+      subtext: '「기후기술산업통계」, 한국과학기술연구원'
+    },
+    tooltip: {},
+    legend: {
+      left: 'right',
+      data: ['특허보유규모', '당해연도 특허등록건수'],
+    },
+    calculable: true,
+    grid: {
+      top: 80,
+      bottom: 100,
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow',
+          label: {
+            show: true,
+            formatter: function (params) {
+              return params.value.replace('\n', '');
+            }
+          }
+        }
+      }
+    },
+    xAxis: [
+      {
+        type: 'category',
+        axisLabel: { interval: 0 },
+        data: [
+          '합계 소계',
+          '\n감축 소계',
+          '감축 비재생에너지',
+          '\n감축 재생에너지',
+          '감축 신에너지',
+          '\n감축 에너지저장',
+          '감축 송배전 및 에너지관리',
+          '\n감축 에너지수요',
+          '감축 온실가스  고정',
+          '\n적응 소계',
+          '적응 농업축산',
+          '\n적응 물',
+          '적응 예측, 모니터링',
+          '\n 적응 해상수산연안',
+          '적응 건강',
+          '\n 적응 산림육상',
+          '감축 및 적응 소계',
+          '\n감축 및 적응 융복합',
+        ],
+        splitLine: { show: false }
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        name: '(단위: 건）'
+      }
+    ],
+    series: [
+      { name: '특허보유규모', type: 'bar' },
+      { name: '당해연도 특허등록건수', type: 'bar' },
+
+      {
+        name: '대분류별 특허보유규모 비율 ',
+        type: 'pie',
+        center: ['75%', '35%'],
+        radius: '28%',
+        z: 100
+      }
+    ]
+  },
+  options: [
+    {
+      title: { text: '2020 기후기술 영역별 기업 및 기관의 누적 특허 건수' },
+      series: [
+        { data: dataMap.data1['2020'] },
+        { data: dataMap.data2['2020'] },
+
+        {
+          data: [
+            { name: '감축', value: dataMap.data1['2020'][1].value},
+            { name: '적응', value: dataMap.data1['2020'][9].value},
+            { name: '감축 및 적응', value: dataMap.data1['2020'][16].value }
+          ]
+        }
+      ]
+    },
+    {
+      title: { text: '2019 기후기술 영역별 기업 및 기관의 누적 특허 건수' },
+      series: [
+      { data: dataMap.data1['2019'] },
+        { data: dataMap.data2['2019'] },
+        {
+          data: [
+            { name: '감축', value: dataMap.data1['2019'][1].value },
+            { name: '적응', value: dataMap.data1['2019'][9].value  },
+            { name: '감축 및 적응', value: dataMap.data1['2019'][16].value }
+          ]
+        }
+      ]
+    },
+  ]
+};
+
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+  </script>
+</body>
+</html>

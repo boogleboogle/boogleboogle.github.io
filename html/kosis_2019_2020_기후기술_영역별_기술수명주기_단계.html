@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+<head>
+  <meta charset="utf-8">
+</head>
+<body style="height: 100%; margin: 0">
+  <div id="container" style="height: 100%"></div>
+
+  
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script>
+  <script type="text/javascript">
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var app = {};
+    
+    var option;
+
+    var dataMap = {};
+function dataFormatter(obj) {
+  var pList = [          '합계 소계',
+          '\n감축 소계',
+          '감축 비재생에너지',
+          '\n감축 재생에너지',
+          '감축 신에너지',
+          '\n감축 에너지저장',
+          '감축 송배전 및 에너지관리',
+          '\n감축 에너지수요',
+          '감축 온실가스  고정',
+          '\n적응 소계',
+          '적응 농업축산',
+          '\n적응 물',
+          '적응 예측,모니터링',
+          '\n적응 해양수산연안',
+          '적응 건강',
+          '\n적응 산림육상',
+          '감축 및 적응 소계',
+          '\n감축 및 적응 융복합',];
+  var temp;
+  for (var year = 2019; year <= 2020; year++) {
+    var max = 0;
+    var sum = 0;
+    temp = obj[year];
+    for (var i = 0, l = temp.length; i < l; i++) {
+      max = Math.max(max, temp[i]);
+      sum += temp[i];
+      obj[year][i] = {
+        name: pList[i],
+        value: temp[i],
+      };
+    }
+
+    obj[year + 'max'] = Math.floor(max / 100) * 100;
+    obj[year + 'sum'] = sum;
+
+  }
+  return obj;
+}
+// 합계소계, 감축 소계, 감축 비재생에너지, 감축 재생에너지, 감축 신에너지, 감축 에너지저장, 감축 송재번 및 에너지관리, 감축 에너지수요, 감축 온실가스 고정, 적응 소계, 적응 농업축산, 적응 물관리, 적응 예측모니터링, 적응 해양수산연안, 적응 건강, 적응 산림육상, 감축및 적응 소계, 감축및 적응 감축 및 적응 융복합
+// 합계
+dataMap.dataTotal = dataFormatter({
+    2020: [7604, 6012, 78, 2064, 148, 464, 424, 2790, 45, 1432, 533, 721, 27, 58, 48, 45, 159, 159],
+    2019: [7379, 6163, 84, 2113, 148, 481, 433, 2856, 48, 1049, 417, 632, 0, 0, 0, 0, 167, 167],
+    
+});
+// 기술개발기
+dataMap.dataStep1 = dataFormatter({
+    2020: [585, 431, 34, 105, 2, 54, 0, 225, 11, 139, 59, 36, 10, 7, 19, 8, 15, 15],
+    2019: [478, 352, 7, 75, 7, 40, 11, 210, 2, 92, 53, 39, 0, 0, 0, 0, 34, 34],
+
+    
+});
+// 기술도입기
+dataMap.dataStep2 = dataFormatter({
+    2020: [1533, 1181, 20, 282, 101, 70, 265, 419, 24, 326, 79, 193, 7, 22, 10, 15, 26, 26],
+    2019: [302, 227, 2, 66, 9, 29, 15, 104, 2, 65, 18, 47, 0, 0, 0, 0, 10, 10],
+
+    
+});
+// 기술성장기
+dataMap.dataStep3 = dataFormatter({
+    2020: [4619, 3686, 18, 1518, 42, 261, 120, 1718, 8, 843, 363, 416, 9, 20, 16, 19, 90, 90],
+    2019: [5562, 4704, 57, 1780, 118, 314, 362, 2029, 44, 766, 297, 469, 0, 0, 0, 0, 92, 92],
+
+    
+});
+// 기술성숙기
+dataMap.dataStep4 = dataFormatter({
+    2020: [851, 707, 7, 159, 3, 78, 39, 419, 1, 119, 31, 72, 2, 9, 3, 2, 26, 26],
+    2019: [1019, 868, 17, 187, 13, 98, 46, 506, 0, 122, 44, 78, 0, 0, 0, 0, 29, 29],
+
+    
+});
+
+// 기술쇠퇴기
+dataMap.dataStep5 = dataFormatter({
+    2020: [15, 8, 0, 0, 0, 0, 0, 8, 0, 6, 2, 4, 0, 0, 0, 0, 2, 2],
+    2019: [19, 12, 2, 5, 0, 0, 0, 6, 0, 5, 5, 0, 2, 2],
+
+    
+});
+
+
+
+option = {
+  baseOption: {
+    timeline: {
+      axisType: 'category',
+      // realtime: false,
+      // loop: false,
+      autoPlay: true,
+      // currentIndex: 2,
+      playInterval: 3000,
+      // controlStyle: {
+      //     position: 'left'
+      // },
+      data: [
+        '2019',
+        '2020',
+      ],
+      label: {
+        formatter: function (s) {
+          return new Date(s).getFullYear();
+        }
+      }
+    },
+    title: {
+      subtext: '「기후기술산업통계」, 한국과학기술연구원'
+    },
+    tooltip: {},
+    legend: {
+      left: 'right',
+      data: ['합계', '기술개발기', '기술도입기', '기술성장기', '기술성숙기', '기술쇠퇴기'],
+    },
+    calculable: true,
+    grid: {
+      top: 80,
+      bottom: 100,
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow',
+          label: {
+            show: true,
+            formatter: function (params) {
+              return params.value.replace('\n', '');
+            }
+          }
+        }
+      }
+    },
+    xAxis: [
+      {
+        type: 'category',
+        axisLabel: { interval: 0 },
+        data: [
+          '합계 소계',
+          '\n감축 소계',
+          '감축 비재생에너지',
+          '\n감축 재생에너지',
+          '감축 신에너지',
+          '\n감축 에너지저장',
+          '감축 송배전 및 에너지관리',
+          '\n감축 에너지수요',
+          '감축 온실가스  고정',
+          '\n적응 소계',
+          '적응 농업축산',
+          '\n적응 물',
+          '적응 예측, 모니터링',
+          '\n 적응 해상수산연안',
+          '적응 건강',
+          '\n 적응 산림육상',
+          '감축 및 적응 소계',
+          '\n감축 및 적응 융복합',
+        ],
+        splitLine: { show: false }
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        name: '(단위: 건)'
+      }
+    ],
+    series: [
+      { name: '합계', type: 'bar' },
+      { name: '기술개발기', type: 'bar' },
+      { name: '기술도입기', type: 'bar' },
+      { name: '기술성장기', type: 'bar' },
+      { name: '기술성숙기', type: 'bar' },
+      { name: '기술쇠퇴기', type: 'bar' },
+      {
+        name: '대분류별 비율 ',
+        type: 'pie',
+        center: ['75%', '35%'],
+        radius: '28%',
+        z: 100
+      }
+    ]
+  },
+  options: [
+    {
+      title: { text: '2020 기후기술 영역별 기술수명주기 단계' },
+      series: [
+        { data: dataMap.dataTotal['2020'] },
+        { data: dataMap.dataStep1['2020'] },
+        { data: dataMap.dataStep2['2020'] },
+        { data: dataMap.dataStep3['2020'] },
+        { data: dataMap.dataStep4['2020'] },
+        { data: dataMap.dataStep5['2020'] },
+        {
+          data: [
+            { name: '감축', value: dataMap.dataTotal['2020'][1].value },
+            { name: '적응', value: dataMap.dataTotal['2020'][9].value  },
+            { name: '감축 및 적응', value: dataMap.dataTotal['2020'][16].value }
+          ]
+        }
+      ]
+    },
+    {
+      title: { text: '2019 기후기술 영역별 기술수명주기 단계' },
+      series: [
+        { data: dataMap.dataTotal['2019'] },
+        { data: dataMap.dataStep1['2019'] },
+        { data: dataMap.dataStep2['2019'] },
+        { data: dataMap.dataStep3['2019'] },
+        { data: dataMap.dataStep4['2019'] },
+        { data: dataMap.dataStep5['2019'] },
+        {
+          data: [
+            { name: '감축', value: dataMap.dataTotal['2019'][1].value },
+            { name: '적응', value: dataMap.dataTotal['2019'][9].value  },
+            { name: '감축 및 적응', value: dataMap.dataTotal['2019'][16].value }
+          ]
+        }
+      ]
+    },
+  ]
+};
+
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+  </script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+<head>
+  <meta charset="utf-8">
+</head>
+<body style="height: 100%; margin: 0">
+  <div id="container" style="height: 100%"></div>
+
+  
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script>
+  <script type="text/javascript">
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var app = {};
+    
+    var option;
+
+    var dataMap = {};
+function dataFormatter(obj) {
+  var pList = [          '합계 소계',
+          '\n감축 소계',
+          '감축 비재생에너지',
+          '\n감축 재생에너지',
+          '감축 신에너지',
+          '\n감축 에너지저장',
+          '감축 송배전 및 에너지관리',
+          '\n감축 에너지수요',
+          '감축 온실가스  고정',
+          '\n적응 소계',
+          '적응 농업축산',
+          '\n적응 물',
+          '적응 예측,모니터링',
+          '\n적응 해양수산연안',
+          '적응 건강',
+          '\n적응 산림육상',
+          '감축 및 적응 소계',
+          '\n감축 및 적응 융복합',];
+  var temp;
+  for (var year = 2019; year <= 2020; year++) {
+    var max = 0;
+    var sum = 0;
+    temp = obj[year];
+    for (var i = 0, l = temp.length; i < l; i++) {
+      max = Math.max(max, temp[i]);
+      sum += temp[i];
+      obj[year][i] = {
+        name: pList[i],
+        value: temp[i],
+      };
+    }
+
+    obj[year + 'max'] = Math.floor(max / 100) * 100;
+    obj[year + 'sum'] = sum;
+
+  }
+  return obj;
+}
+// 합계소계, 감축 소계, 감축 비재생에너지, 감축 재생에너지, 감축 신에너지, 감축 에너지저장, 감축 송재번 및 에너지관리, 감축 에너지수요, 감축 온실가스 고정, 적응 소계, 적응 농업축산, 적응 물관리, 적응 예측모니터링, 적응 해양수산연안, 적응 건강, 적응 산림육상, 감축및 적응 소계, 감축및 적응 감축 및 적응 융복합
+// 합계
+dataMap.dataTotal = dataFormatter({
+    2020: [2296, 1876, 20, 515, 58, 246, 135, 883, 19, 354, 160, 158, 11, 8, 18, 0, 66, 66],
+    2019: [1980, 1695, 29, 460, 50, 226, 77, 830, 24, 225, 107, 118, 0, 0, 0, 0, 60, 60],
+});
+// 아시아태평양
+dataMap.dataArea1 = dataFormatter({
+    2020: [2517, 2070, 28, 638, 79, 229, 154, 923, 19, 392, 156, 165, 18, 15, 38, 0, 56, 56],
+    2019: [1813, 1580, 12, 524, 44, 181, 56, 742, 21, 190, 84, 106, 0, 0, 0, 0, 43, 43],
+    
+});
+// 서유럽
+dataMap.dataArea2 = dataFormatter({
+    2020: [206, 179, 2, 38, 22, 17, 45, 51, 3, 26, 10, 8, 2, 0, 5, 0, 2, 2],
+    2019: [86, 75, 3, 22, 4, 6, 6, 35, 0, 11, 3, 8, 0, 0, 0, 0, 0, 0],
+    
+});
+// 동유럽
+dataMap.dataArea3 = dataFormatter({
+    2020: [190, 160, 5, 15, 15, 21, 25, 79, 0, 29, 19, 11, 0, 0, 0, 0, 0, 0],
+    2019: [143, 123, 0, 15, 4, 22, 8, 74, 0, 21, 15, 6, 0, 0, 0, 0, 0, 0],
+    
+});
+// 북미
+dataMap.dataArea4 = dataFormatter({
+    2020: [563, 471, 2, 116, 28, 73, 40, 207, 5, 72, 45, 15, 3, 1, 7, 0, 20, 20],
+    2019: [485, 425, 6, 107, 22, 59, 33, 193, 5, 43, 30, 13, 0, 0, 0, 0, 17, 17],
+    
+});
+
+// 중남미
+dataMap.dataArea5 = dataFormatter({
+    2020: [84, 49, 0, 8, 9, 6, 0, 26, 0, 25, 5, 10, 0, 3, 7, 0, 10, 10],
+    2019: [53, 33, 0, 14, 0, 7, 0, 12, 0, 11, 7, 4, 0, 0, 0, 0, 10, 10],
+    
+});
+
+// 중동아프리카
+dataMap.dataArea6 = dataFormatter({
+    2020: [126, 99, 6, 15, 5, 9, 9, 47, 8, 24, 2, 18, 2, 0, 2, 0, 3, 3],
+    2019: [89, 76, 21, 10, 4, 9, 0, 28, 3, 10, 2, 9, 0, 0, 0, 0, 3, 3],
+});
+
+// 기타
+dataMap.dataEtc = dataFormatter({
+    2020: [317, 237, 0, 30, 3, 57, 2, 146, 0, 70, 45, 25, 0, 0, 0, 0, 10, 10],
+    2019: [410, 344, 4, 48, 13, 68, 22, 190, 0, 55, 32, 23, 0, 0, 0, 0, 11, 11],
+});
+
+option = {
+  baseOption: {
+    timeline: {
+      axisType: 'category',
+      // realtime: false,
+      // loop: false,
+      autoPlay: true,
+      // currentIndex: 2,
+      playInterval: 3000,
+      // controlStyle: {
+      //     position: 'left'
+      // },
+      data: [
+        '2019',
+        '2020',
+      ],
+      label: {
+        formatter: function (s) {
+          return new Date(s).getFullYear();
+        }
+      }
+    },
+    title: {
+      subtext: '「기후기술산업통계」, 한국과학기술연구원'
+    },
+    tooltip: {},
+    legend: {
+      left: 'right',
+      data: ['합계', '아시아태평양', '서유럽', '동유럽', '북미', '중남미', '중동아프리카', '기타'],
+    },
+    calculable: true,
+    grid: {
+      top: 80,
+      bottom: 100,
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow',
+          label: {
+            show: true,
+            formatter: function (params) {
+              return params.value.replace('\n', '');
+            }
+          }
+        }
+      }
+    },
+    xAxis: [
+      {
+        type: 'category',
+        axisLabel: { interval: 0 },
+        data: [
+          '합계 소계',
+          '\n감축 소계',
+          '감축 비재생에너지',
+          '\n감축 재생에너지',
+          '감축 신에너지',
+          '\n감축 에너지저장',
+          '감축 송배전 및 에너지관리',
+          '\n감축 에너지수요',
+          '감축 온실가스  고정',
+          '\n적응 소계',
+          '적응 농업축산',
+          '\n적응 물',
+          '적응 예측, 모니터링',
+          '\n 적응 해상수산연안',
+          '적응 건강',
+          '\n 적응 산림육상',
+          '감축 및 적응 소계',
+          '\n감축 및 적응 융복합',
+        ],
+        splitLine: { show: false }
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        name: '(단위: 개소）'
+      }
+    ],
+    series: [
+      { name: '합계', type: 'bar' },
+      { name: '아시아태평양', type: 'bar' },
+      { name: '서유럽', type: 'bar' },
+      { name: '동유럽', type: 'bar' },
+      { name: '북미', type: 'bar' },
+      { name: '중남미', type: 'bar' },
+      { name: '중동아프리카', type: 'bar' },
+      { name: '기타', type: 'bar' },
+      {
+        name: '대분류별 비율 ',
+        type: 'pie',
+        center: ['75%', '35%'],
+        radius: '28%',
+        z: 100
+      }
+    ]
+  },
+  options: [
+    {
+      title: { text: '2020 기후기술 영역별 해외진출지역(복수응답)' },
+      series: [
+        { data: dataMap.dataTotal['2020'] },
+        { data: dataMap.dataArea1['2020'] },
+        { data: dataMap.dataArea2['2020'] },
+        { data: dataMap.dataArea3['2020'] },
+        { data: dataMap.dataArea4['2020'] },
+        { data: dataMap.dataArea5['2020'] },
+        { data: dataMap.dataArea6['2020'] },
+        { data: dataMap.dataEtc['2020'] },
+        {
+          data: [
+            { name: '감축', value: dataMap.dataTotal['2020'][1].value },
+            { name: '적응', value: dataMap.dataTotal['2020'][9].value  },
+            { name: '감축 및 적응', value: dataMap.dataTotal['2020'][16].value }
+          ]
+        }
+      ]
+    },
+    {
+      title: { text: '2019 기후기술 영역별 해외진출지역(복수응답)' },
+      series: [
+        { data: dataMap.dataTotal['2019'] },
+        { data: dataMap.dataArea1['2019'] },
+        { data: dataMap.dataArea2['2019'] },
+        { data: dataMap.dataArea3['2019'] },
+        { data: dataMap.dataArea4['2019'] },
+        { data: dataMap.dataArea5['2019'] },
+        { data: dataMap.dataArea6['2019'] },
+        { data: dataMap.dataEtc['2019'] },
+        {
+          data: [
+            { name: '감축', value: dataMap.dataTotal['2019'][1].value },
+            { name: '적응', value: dataMap.dataTotal['2019'][9].value  },
+            { name: '감축 및 적응', value: dataMap.dataTotal['2019'][16].value }
+          ]
+        }
+      ]
+    },
+  ]
+};
+
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+  </script>
+</body>
+</html>

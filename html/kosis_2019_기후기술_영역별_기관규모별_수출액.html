@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+<head>
+  <meta charset="utf-8">
+</head>
+<body style="height: 100%; margin: 0">
+  <div id="container" style="height: 100%"></div>
+
+  
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script>
+  <script type="text/javascript">
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var app = {};
+    
+    var option;
+
+    var dataMap = {};
+function dataFormatter(obj) {
+  var pList = [          '합계 소계',
+          '\n감축 소계',
+          '감축 비재생에너지',
+          '\n감축 재생에너지',
+          '감축 신에너지',
+          '\n감축 에너지저장',
+          '감축 송배전 및 에너지관리',
+          '\n감축 에너지수요',
+          '감축 온실가스  고정',
+          '\n적응 소계',
+          '적응 농업축산',
+          '\n적응 물',
+          '감축 및 적응 소계',
+          '\n감축 및 적응 융복합',];
+  var temp;
+  for (var year = 2019; year <= 2019; year++) {
+    var max = 0;
+    var sum = 0;
+    temp = obj[year];
+    for (var i = 0, l = temp.length; i < l; i++) {
+      max = Math.max(max, temp[i]);
+      sum += temp[i];
+      obj[year][i] = {
+        name: pList[i],
+        value: temp[i],
+      };
+    }
+
+    obj[year + 'max'] = Math.floor(max / 100) * 100;
+    obj[year + 'sum'] = sum;
+
+  }
+  return obj;
+}
+// 합계소계, 감축 소계, 감축 비재생에너지, 감축 재생에너지, 감축 신에너지, 감축 에너지저장, 감축 송재번 및 에너지관리, 감축 에너지수요, 감축 온실가스 고정, 적응 소계, 적응 농업축산, 적응 물관리, 적응 예측모니터링, 적응 해양수산연안, 적응 건강, 적응 산림육상, 감축및 적응 소계, 감축및 적응 감축 및 적응 융복합
+// 전체
+dataMap.dataTotal = dataFormatter({
+    2019: [32748715, 30612616, 128262, 2718478, 188219, 10847569, 4975952, 11685328, 68808, 1567451, 1380736, 186715, 568648, 568648],
+    
+});
+// 100억 미만
+dataMap.dataSmall = dataFormatter({
+    2019: [886101, 717132, 21540, 250764, 55785, 69051, 18439, 278558, 22995, 131337, 96905, 34432, 37632, 37632],
+
+    
+});
+// 100억 이상 600억 미만
+dataMap.data100 = dataFormatter({
+    2019: [2032003, 1913510, 16301, 546339, 70661, 500251, 23852, 738388, 17718, 112649, 22036, 90613, 5844, 5844],
+
+    
+});
+
+// 600억 이상 2000억 미만
+dataMap.data600 = dataFormatter({
+    2019: [4451698, 4329940, 26864, 377333, 0, 699095, 262393, 2936159, 28095, 76153, 53284, 22869, 45605, 45605],
+
+    
+});
+// 2000억 이상
+dataMap.data2000 = dataFormatter({
+    2019: [25378914, 23652034, 63557, 1544041, 61773, 9579172, 4671268, 7732223, 0, 1247313, 1208512, 38801, 479567, 479567],
+
+    
+});
+
+
+
+
+
+option = {
+  baseOption: {
+    timeline: {
+      axisType: 'category',
+      // realtime: false,
+      // loop: false,
+      autoPlay: true,
+      // currentIndex: 2,
+      playInterval: 1000,
+      // controlStyle: {
+      //     position: 'left'
+      // },
+      data: [
+        '2019',
+      ],
+      label: {
+        formatter: function (s) {
+          return new Date(s).getFullYear();
+        }
+      }
+    },
+    title: {
+      subtext: '「기후기술산업통계」, 한국과학기술연구원'
+    },
+    tooltip: {},
+    legend: {
+      left: 'right',
+      data: ['전체', '100억 원 미만', '100억 원 이상 600억 원 미만', '6,000억 원 이상 2,000억 원 미만', '2,000억 원 이상'],
+    },
+    calculable: true,
+    grid: {
+      top: 80,
+      bottom: 100,
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow',
+          label: {
+            show: true,
+            formatter: function (params) {
+              return params.value.replace('\n', '');
+            }
+          }
+        }
+      }
+    },
+    xAxis: [
+      {
+        type: 'category',
+        axisLabel: { interval: 0 },
+        data: [
+          '합계 소계',
+          '\n감축 소계',
+          '감축 비재생에너지',
+          '\n감축 재생에너지',
+          '감축 신에너지',
+          '\n감축 에너지저장',
+          '감축 송배전 및 에너지관리',
+          '\n감축 에너지수요',
+          '감축 온실가스  고정',
+          '\n적응 소계',
+          '적응 농업축산',
+          '\n적응 물',
+          '감축 및 적응 소계',
+          '\n감축 및 적응 융복합',
+        ],
+        splitLine: { show: false }
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        name: '(단위: 백만원）'
+      }
+    ],
+    series: [
+      { name: '전체', type: 'bar' },
+      { name: '100억 원 미만', type: 'bar' },
+      { name: '100억 원 이상 600억 원 미만', type: 'bar' },
+      { name: '6,000억 원 이상 2,000억 원 미만', type: 'bar' },
+      { name: '2,000억 원 이상', type: 'bar' },
+      {
+        name: '대분류별 비율 ',
+        type: 'pie',
+        center: ['75%', '35%'],
+        radius: '28%',
+        z: 100
+      }
+    ]
+  },
+  options: [
+    {
+      title: { text: '2019 기후기술 영역별 기관규모별 수출액' },
+      series: [
+        { data: dataMap.dataTotal['2019'] },
+        { data: dataMap.dataSmall['2019'] },
+        { data: dataMap.data100['2019'] },
+        { data: dataMap.data600['2019'] },
+        { data: dataMap.data2000['2019'] },
+        {
+          data: [
+            { name: '감축', value: dataMap.dataTotal['2019'][1].value },
+            { name: '적응', value: dataMap.dataTotal['2019'][9].value  },
+            { name: '감축 및 적응', value: dataMap.dataTotal['2019'][12].value }
+          ]
+        }
+      ]
+    },
+  ]
+};
+
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+  </script>
+</body>
+</html>
