@@ -1,0 +1,135 @@
+<!--
+	THIS EXAMPLE WAS DOWNLOADED FROM https://echarts.apache.org/examples/en/editor.html?c=dataset-link
+-->
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+<head>
+  <meta charset="utf-8">
+</head>
+<body style="height: 100%; margin: 0">
+  <div id="container" style="height: 100%"></div>
+
+  
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script>
+  <!-- Uncomment this line if you want to dataTool extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.3.3/dist/extension/dataTool.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to use gl extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-gl@2/dist/echarts-gl.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to echarts-stat extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to use map
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@4.9.0/map/js/china.js"></script>
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@4.9.0/map/js/world.js"></script>
+  -->
+  <!-- Uncomment these two lines if you want to use bmap extension
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=YOUR_API_KEY"></script>
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.3.3/dist/extension/bmap.min.js"></script>
+  -->
+
+  <script type="text/javascript">
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var app = {};
+    
+    var option;
+
+    setTimeout(function () {
+  option = {
+    legend: {},
+    tooltip: {
+      trigger: 'axis',
+      showContent: false
+    },
+    dataset: {
+      source: [
+        ['product', '1990', '1991', '1992', '1993', '1994', '1995', '1996', '1997', '1998', '1999', '2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020'],
+        ['기름', 130905882, 151640238, 174099044, 189525598, 206715190, 226109341, 239507053, 246268301, 183976643, 201086952, 206777990, 206697440, 207840776, 206115903, 197114955, 195945485, 191081226, 188370738, 172448086, 174098735, 177391053, 172560665, 171793132, 169775540, 162761193, 171631321, 185413320, 180697686, 179105873, 177453103, 166716560],
+        ['시멘트', 15873030, 18962260, 21128860, 24700490, 26839970, 28104570, 28308500, 29320370, 22878950, 23719440, 24755890, 25665290, 27107070, 27920400, 26123590, 23325880, 23139680, 26275120, 26079810, 24553390, 24297350, 24720600, 24848600, 25050140, 25411990, 25778710, 26671760, 26350580, 24702060, 25075894, 22871408],
+        ['석탄', 94307994, 94093881, 91320434, 99619867, 101801474, 105299908, 122689419, 133312908, 137598389, 145634742, 163883136, 174625609, 187636519, 195319077, 203137986, 209293477, 216428256, 228427157, 253041243, 262394545, 295050323, 320169094, 316989866, 320643622, 331303871, 335411292, 320697359, 337668762, 340347600, 321606070, 282883413],
+        ['가스', 6432501, 7440600, 9732989, 12157951, 16184823, 19573693, 25859812, 31427833, 29400587, 35797183, 40205200, 44163024, 49068185, 51399242, 60234609, 65269580, 67995590, 73369567, 75923500, 72171459, 91540405, 98513225, 106565205, 111530033, 101445313, 92590031, 96654932, 100859186, 117172116, 113586430, 114830613],
+        ['기타 산업', 2949660, 3519540, 3751620, 4267760, 4294950, 4608500, 4667440, 4836850, 4575120, 4738980, 4908520, 5094030, 5136760, 5200220, 5638030, 5729980, 5860970, 6463730, 6532300, 6011920, 7310790, 8586750, 8739060, 8792120, 9672260, 9802260, 9821270, 10170900, 10303060, 10303060, 10303060],
+      ]
+    },
+    xAxis: { type: 'category' },
+    yAxis: { gridIndex: 0 },
+    grid: { top: '55%' },
+    series: [
+      {
+        type: 'line',
+        smooth: true,
+        seriesLayoutBy: 'row',
+        emphasis: { focus: 'series' }
+      },
+      {
+        type: 'line',
+        smooth: true,
+        seriesLayoutBy: 'row',
+        emphasis: { focus: 'series' }
+      },
+      {
+        type: 'line',
+        smooth: true,
+        seriesLayoutBy: 'row',
+        emphasis: { focus: 'series' }
+      },
+      {
+        type: 'line',
+        smooth: true,
+        seriesLayoutBy: 'row',
+        emphasis: { focus: 'series' }
+      },
+     
+      {
+        type: 'pie',
+        id: 'pie',
+        radius: '30%',
+        center: ['50%', '25%'],
+        emphasis: {
+          focus: 'self'
+        },
+        label: {
+          formatter: '{b}: {@2012} ({d}%) (단위:톤)'
+        },
+        encode: {
+          itemName: 'product',
+          value: '2012',
+          tooltip: '2012'
+        }
+      }
+    ]
+  };
+  myChart.on('updateAxisPointer', function (event) {
+    const xAxisInfo = event.axesInfo[0];
+    if (xAxisInfo) {
+      const dimension = xAxisInfo.value + 1;
+      myChart.setOption({
+        series: {
+          id: 'pie',
+          label: {
+            formatter: '{b}: {@[' + dimension + ']} ({d}%) (단위:톤)'
+          },
+          encode: {
+            value: dimension,
+            tooltip: dimension
+          }
+        }
+      });
+    }
+  });
+  myChart.setOption(option);
+});
+
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+  </script>
+</body>
+</html>
